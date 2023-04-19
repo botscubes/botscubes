@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    env_file:
+      - ./nginx.env
+    volumes:
+      - ./data/nginx/templates:/etc/nginx/templates:ro
+      - ./log/nginx:/var/log/nginx:rw
+      - ./data/certbot/conf:/etc/letsencrypt:rw
+      - ./data/certbot/www:/var/www/certbot:rw
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - bot
+    command: "/bin/sh -c '/docker-entrypoint.sh nginx -g \"daemon off;\"; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\";'"
+    networks:
+      - bcbot_nw
+    
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt:rw
+      - ./data/certbot/www:/var/www/certbot:rw
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - bcbot_nw
+
+  bot:
+    build: ../bot
+    env_file:
+      - ./bot.env
+    volumes:
+      - ../bot:/app:rw
+      - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
+    tty: true
+    networks:
+      - bcbot_nw
+    
+networks:
+  bcbot_nw:

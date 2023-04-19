@@ -1,0 +1,5 @@
+*.env
+log/
+data/certbot/
+*.sh
+!init-letsencrypt.sh
