@@ -17,13 +17,22 @@ TBOT_LOG_PATH | Optional
 Variable | Required
 --- | ---
 NGINX_BOT_LISTEN_PORT | Yes
-NGINX_SERVER_NAME | Yes
+NGINX_SERVER_NAME | Yes  
+
+### ***pgsql.env***  
+
+Variable | Required
+--- | ---
+POSTGRES_DB | Yes
+POSTGRES_USER | Yes  
+POSTGRES_PASSWORD | Yes  
 
 ## Запуск  
 
 1. Создать и заполнить **.env** файлы:   
 
 - bot.env 
+- pgsql.env 
 - nginx.env  
 
 Файлы *.env.sample - шаблоны **.env** файлов  

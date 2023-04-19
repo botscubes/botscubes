@@ -40,6 +40,20 @@ services:
     tty: true
     networks:
       - bcbot_nw
-    
+  
+  pgsql:
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    env_file:
+      - ./pgsql.env
+    volumes: 
+      - ./data/pgsql/pginit:/docker-entrypoint-initdb.d:rw
+      - ./data/pgsql/pgdata:/var/lib/postgresql/data:rw
+    ports:
+      - "5431:5432"
+    networks:
+      - bcbot_nw
+
+
 networks:
   bcbot_nw:
