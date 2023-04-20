@@ -34,6 +34,7 @@ services:
     build: ../bot
     env_file:
       - ./bot.env
+      - ./pgsql_bot.env
     volumes:
       - ../bot:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
@@ -41,14 +42,14 @@ services:
     networks:
       - bcbot_nw
   
-  pgsql:
+  pgsql_bot:
     image: postgres:15.1-alpine
     restart: unless-stopped
     env_file:
-      - ./pgsql.env
+      - ./pgsql_bot.env
     volumes: 
-      - ./data/pgsql/pginit:/docker-entrypoint-initdb.d:rw
-      - ./data/pgsql/pgdata:/var/lib/postgresql/data:rw
+      - ./data/pgsql_bot/pginit:/docker-entrypoint-initdb.d:rw
+      - ./data/pgsql_bot/pgdata:/var/lib/postgresql/data:rw
     ports:
       - "5431:5432"
     networks:

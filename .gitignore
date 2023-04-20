@@ -1,7 +1,7 @@
 *.env
 log/
 data/certbot/
-data/pgsql/
+data/pgsql_bot/pgdata/
 *.sh
 
 !init-letsencrypt.sh

@@ -30,3 +30,6 @@ nginx-reload:
 
 ps:
 	docker compose ps
+
+down:
+	docker compose -f docker-compose.dev.yml down
