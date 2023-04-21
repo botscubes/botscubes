@@ -32,6 +32,7 @@ services:
 
   bot:
     build: ../bot
+    restart: unless-stopped
     env_file:
       - ./bot.env
       - ./pgsql_bot.env
