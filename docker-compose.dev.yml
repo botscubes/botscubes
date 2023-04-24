@@ -2,6 +2,8 @@ version: '3'
 
 services:
   nginx:
+    # TODO: add script for rebuild nginx conf. without restart container
+    #       see /docker-entrypoint.sh
     image: nginx:alpine
     restart: unless-stopped
     env_file:
@@ -56,6 +58,37 @@ services:
     networks:
       - bcbot_nw
 
+  user:
+    build: ../user-service
+    restart: unless-stopped
+    volumes:
+      - ../user-service:/app:rw
+      - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
+    tty: true
+    networks:
+      - bcbot_nw
+
+  pgsql_user:
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    env_file:
+      - ./pgsql_user.env
+    volumes: 
+      - ./data/pgsql_user/pginit:/docker-entrypoint-initdb.d:rw
+      - ./data/pgsql_user/pgdata:/var/lib/postgresql/data:rw
+    ports:
+      - "5430:5432"
+    networks:
+      - bcbot_nw
+
+  redis_user: 
+    image: redis:7.0.5-alpine
+    command: redis-server
+    volumes:
+    - ./data/redis_user/redis_data:/var/lib/redis:rw
+    - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - bcbot_nw
 
 networks:
   bcbot_nw:
