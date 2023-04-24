@@ -20,7 +20,8 @@ services:
       - bot
     command: "/bin/sh -c '/docker-entrypoint.sh nginx -g \"daemon off;\"; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\";'"
     networks:
-      - bcbot_nw
+      - bc_bot_nw
+      - bc_user_nw
     
   certbot:
     image: certbot/certbot
@@ -29,8 +30,6 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt:rw
       - ./data/certbot/www:/var/www/certbot:rw
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - bcbot_nw
 
   bot:
     build: ../bot
@@ -43,7 +42,7 @@ services:
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
     tty: true
     networks:
-      - bcbot_nw
+      - bc_bot_nw
   
   pgsql_bot:
     image: postgres:15.1-alpine
@@ -56,7 +55,7 @@ services:
     ports:
       - "5431:5432"
     networks:
-      - bcbot_nw
+      - bc_bot_nw
 
   user:
     build: ../user-service
@@ -66,7 +65,7 @@ services:
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
     tty: true
     networks:
-      - bcbot_nw
+      - bc_user_nw
 
   pgsql_user:
     image: postgres:15.1-alpine
@@ -79,7 +78,7 @@ services:
     ports:
       - "5430:5432"
     networks:
-      - bcbot_nw
+      - bc_user_nw
 
   redis_user: 
     image: redis:7.0.5-alpine
@@ -88,7 +87,8 @@ services:
     - ./data/redis_user/redis_data:/var/lib/redis:rw
     - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
-      - bcbot_nw
+      - bc_user_nw
 
 networks:
-  bcbot_nw:
+  bc_bot_nw:
+  bc_user_nw:
