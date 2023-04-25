@@ -8,10 +8,10 @@ restart:
 	docker compose restart
 
 restart-dev:
-	docker compose restart
+	docker compose -f docker-compose.dev.yml restart
 
 ps:
-	docker compose ps
+	docker compose -f docker-compose.dev.yml ps
 
 dev: stop-dev
 	docker compose -f docker-compose.dev.yml up -d
@@ -24,28 +24,28 @@ recreate:
 	docker compose -f docker-compose.dev.yml up -d
 
 bot-run:
-	docker compose exec bot go run ./cmd/bot/main.go
+	docker compose -f docker-compose.dev.yml exec bot go run ./cmd/bot/main.go
 
 bot-bash:
-	docker compose exec -it bot bash
+	docker compose -f docker-compose.dev.yml exec -it bot bash
 
 bot-tidy:
-	docker compose exec bot go mod tidy
+	docker compose -f docker-compose.dev.yml exec bot go mod tidy
 
 nginx-sh:
-	docker compose exec -it nginx sh
+	docker compose -f docker-compose.dev.yml exec -it nginx sh
 
 nginx-reload:
-	docker compose exec nginx nginx -s reload
+	docker compose -f docker-compose.dev.yml exec nginx nginx -s reload
 
 down:
-	docker compose -f docker-compose.dev.yml down
+	docker compose -f docker-compose.dev.yml down --remove-orphans
 
 user-tidy:
-	docker compose exec user go mod tidy
+	docker compose -f docker-compose.dev.yml exec user go mod tidy
 
 user-bash:
-	docker compose exec -it user bash
+	docker compose -f docker-compose.dev.yml exec -it user bash
 
 user-run:
-	docker compose exec user go run ./cmd/server.go
+	docker compose -f docker-compose.dev.yml exec user go run ./cmd/server.go

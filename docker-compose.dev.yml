@@ -7,7 +7,7 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     env_file:
-      - ./nginx.env
+      - ./config/env/nginx.env
     volumes:
       - ./data/nginx/templates:/etc/nginx/templates:ro
       - ./log/nginx:/var/log/nginx:rw
@@ -35,8 +35,8 @@ services:
     build: ../bot
     restart: unless-stopped
     env_file:
-      - ./bot.env
-      - ./pgsql_bot.env
+      - ./config/env/bot.env
+      - ./config/env/pgsql_bot.env
     volumes:
       - ../bot:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
@@ -48,7 +48,7 @@ services:
     image: postgres:15.1-alpine
     restart: unless-stopped
     env_file:
-      - ./pgsql_bot.env
+      - ./config/env/pgsql_bot.env
     volumes: 
       - ./data/pgsql_bot/pginit:/docker-entrypoint-initdb.d:rw
       - ./data/pgsql_bot/pgdata:/var/lib/postgresql/data:rw
@@ -63,7 +63,8 @@ services:
     volumes:
       - ../user-service:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
-    tty: true
+    tty: false
+    command: go run ./cmd/server.go
     networks:
       - bc_user_nw
 
@@ -71,7 +72,7 @@ services:
     image: postgres:15.1-alpine
     restart: unless-stopped
     env_file:
-      - ./pgsql_user.env
+      - ./config/env/pgsql_user.env
     volumes: 
       - ./data/pgsql_user/pginit:/docker-entrypoint-initdb.d:rw
       - ./data/pgsql_user/pgdata:/var/lib/postgresql/data:rw
@@ -80,12 +81,12 @@ services:
     networks:
       - bc_user_nw
 
-  redis_user: 
+  redis_auth: 
     image: redis:7.0.5-alpine
     command: redis-server
     volumes:
-    - ./data/redis_user/redis_data:/var/lib/redis:rw
-    - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    - ./data/redis_auth/redis_data:/var/lib/redis:rw
+    - ./config/redis_auth/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - bc_user_nw
 
