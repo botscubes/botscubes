@@ -37,6 +37,7 @@ services:
     env_file:
       - ./config/env/bot.env
       - ./config/env/pgsql_bot.env
+      - ./config/env/redis_auth.env
     volumes:
       - ../bot:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
