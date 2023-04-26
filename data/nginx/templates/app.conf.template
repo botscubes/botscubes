@@ -33,7 +33,7 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     # for telegram webhooks
-    location ^~ /bot {
+    location ^~ /webhook/bot {
         proxy_pass http://bot_api$request_uri;
         proxy_redirect                      off;
         proxy_set_header                    Connection keep-alive;
