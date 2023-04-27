@@ -20,8 +20,8 @@ services:
       - bot
     command: "/bin/sh -c '/docker-entrypoint.sh nginx -g \"daemon off;\"; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\";'"
     networks:
-      - bc_bot_nw
-      - bc_user_nw
+      - bot_nw
+      - user_nw
     
   certbot:
     image: certbot/certbot
@@ -32,18 +32,19 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   bot:
-    build: ../bot
+    build: ../bot-service
     restart: unless-stopped
     env_file:
       - ./config/env/bot.env
       - ./config/env/pgsql_bot.env
       - ./config/env/redis_auth.env
     volumes:
-      - ../bot:/app:rw
+      - ../bot-service:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
     tty: true
     networks:
-      - bc_bot_nw
+      - bot_nw
+      - redis_auth_nw
   
   pgsql_bot:
     image: postgres:15.1-alpine
@@ -56,7 +57,7 @@ services:
     ports:
       - "5431:5432"
     networks:
-      - bc_bot_nw
+      - bot_nw
 
   user:
     build: ../user-service
@@ -67,7 +68,8 @@ services:
     tty: false
     command: go run ./cmd/server.go
     networks:
-      - bc_user_nw
+      - user_nw
+      - redis_auth_nw
 
   pgsql_user:
     image: postgres:15.1-alpine
@@ -80,7 +82,7 @@ services:
     ports:
       - "5430:5432"
     networks:
-      - bc_user_nw
+      - user_nw
 
   redis_auth: 
     image: redis:7.0.5-alpine
@@ -89,8 +91,9 @@ services:
     - ./data/redis_auth/redis_data:/var/lib/redis:rw
     - ./config/redis_auth/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
-      - bc_user_nw
+      - redis_auth_nw
 
 networks:
-  bc_bot_nw:
-  bc_user_nw:
+  bot_nw:
+  user_nw:
+  redis_auth_nw:
