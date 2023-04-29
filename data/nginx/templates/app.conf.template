@@ -45,7 +45,7 @@ server {
     }
 
     # bot-service API
-    location /api/bot/ {
+    location /api/bots/ {
         proxy_pass http://bot_api$request_uri;
         proxy_redirect                      off;
         proxy_set_header                    Connection keep-alive;
