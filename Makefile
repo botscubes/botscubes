@@ -38,6 +38,9 @@ nginx-sh:
 nginx-reload:
 	docker compose -f docker-compose.dev.yml exec nginx nginx -s reload
 
+nginx-restart:
+	docker compose -f docker-compose.dev.yml restart nginx
+
 down:
 	docker compose -f docker-compose.dev.yml down --remove-orphans
 
