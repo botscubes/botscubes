@@ -36,7 +36,7 @@ bot-restart:
 	docker compose -f docker-compose.dev.yml restart bot
 
 bot-logs:
-	docker compose -f docker-compose.dev.yml logs bot -f
+	docker compose -f docker-compose.dev.yml logs --tail 200 bot -f
 
 dart: bot-restart bot-logs
 

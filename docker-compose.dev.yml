@@ -34,6 +34,11 @@ services:
   bot:
     build: ../bot-service
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
     env_file:
       - ./config/env/bot.env
       - ./config/env/pgsql_bot.env
