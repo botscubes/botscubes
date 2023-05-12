@@ -32,6 +32,14 @@ bot-bash:
 bot-tidy:
 	docker compose -f docker-compose.dev.yml exec bot go mod tidy
 
+bot-restart:
+	docker compose -f docker-compose.dev.yml restart bot
+
+bot-logs:
+	docker compose -f docker-compose.dev.yml logs bot -f
+
+dart: bot-restart bot-logs
+
 nginx-sh:
 	docker compose -f docker-compose.dev.yml exec -it nginx sh
 

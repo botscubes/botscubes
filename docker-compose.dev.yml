@@ -42,7 +42,8 @@ services:
     volumes:
       - ../bot-service:/app:rw
       - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
-    tty: true
+    tty: false
+    command: go run ./cmd/bot/main.go
     networks:
       - bot_nw
       - redis_auth_nw
