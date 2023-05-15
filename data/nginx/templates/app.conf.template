@@ -32,6 +32,9 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Headers' '*' always;
+
     # for telegram webhooks
     location ^~ /webhook/bot {
         proxy_pass http://bot_api$request_uri;
