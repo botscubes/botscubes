@@ -2,24 +2,32 @@
 
 ## Переменные окружения  
 
-### ***bot.env***
+<details>
+    <summary>Списки переменных окружения</summary>
+
+***bot.env***
 
 Variable | Required
 --- | ---
 TBOT_WEBHOOK_BASE | Yes
 TBOT_LISTEN_ADDRESS | Yes
-TBOT_LOG_LEVEL | Optional
-TBOT_LOG_FORMAT | Optional
-TBOT_LOG_PATH | Optional  
+JWT_SECRET_KEY | Yes
+TBOT_LOGGER_TYPE | Optional
 
-### ***nginx.env***
+`TBOT_LOGGER_TYPE` - возможные значения:  
+- `dev`
+- `prod`
+
+***nginx.env***
 
 Variable | Required
 --- | ---
 NGINX_BOT_LISTEN_PORT | Yes
 NGINX_SERVER_NAME | Yes  
+NGINX_USER_LISTEN_PORT | Yes  
 
-### ***pgsql_bot.env***  
+***pgsql_bot.env***  
+***pgsql_user.env***  
 
 Variable | Required
 --- | ---
@@ -29,15 +37,36 @@ POSTGRES_PASSWORD | Yes
 POSTGRES_HOST | Yes  
 POSTGRES_PORT | Yes  
 
+***redis_bot.env***  
+
+Variable | Required
+--- | ---
+REDIS_DB | Yes
+REDIS_PASS | Yes  
+REDIS_HOST | Yes  
+REDIS_PORT | Yes  
+
+***redis_auth.env***  
+
+Variable | Required
+--- | ---
+REDIS_AUTH_DB | Yes
+REDIS_AUTH_PASS | Yes  
+REDIS_AUTH_HOST | Yes  
+REDIS_AUTH_PORT | Yes  
+
+</details>
+
+
 ## Запуск  
 
-1. Создать и заполнить **.env** файлы:   
+1. Создать `.env` файлы: 
 
-- bot.env 
-- pgsql_bot.env 
-- nginx.env  
+- Скопировать в папку `/config/env/` все файлы из `/config/env/samples`
 
-Файлы *.env.sample - шаблоны **.env** файлов  
+- Удалить из названия файлов `.sample`
+
+- Заполнить файлы необходимыми данных
 
 2. Указать домен и email в файле *init-letsencrypt.sh* 
 
