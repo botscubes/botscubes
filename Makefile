@@ -60,3 +60,12 @@ user-bash:
 
 user-run:
 	docker compose -f docker-compose.dev.yml exec user go run ./cmd/server.go
+
+user-restart:
+	docker compose -f docker-compose.dev.yml restart user
+
+web-sh:
+	docker compose -f docker-compose.dev.yml exec -it web sh
+
+web-rebuild:
+	docker compose -f docker-compose.dev.yml up -d --build web

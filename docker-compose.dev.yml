@@ -2,8 +2,6 @@ version: '3'
 
 services:
   nginx:
-    # TODO: add script for rebuild nginx conf. without restart container
-    #       see /docker-entrypoint.sh
     image: nginx:alpine
     restart: unless-stopped
     env_file:
@@ -22,6 +20,7 @@ services:
     networks:
       - bot_nw
       - user_nw
+      - frontend_nw
     
   certbot:
     image: certbot/certbot
@@ -95,8 +94,8 @@ services:
     image: redis:7.0.5-alpine
     command: redis-server
     volumes:
-    - ./data/redis_auth/redis_data:/var/lib/redis:rw
-    - ./config/redis_auth/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./data/redis_auth/redis_data:/var/lib/redis:rw
+      - ./config/redis_auth/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - redis_auth_nw
   
@@ -104,12 +103,19 @@ services:
     image: redis:7.0.5-alpine
     command: redis-server
     volumes:
-    - ./data/redis_bot/redis_data:/var/lib/redis:rw
-    - ./config/redis_bot/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./data/redis_bot/redis_data:/var/lib/redis:rw
+      - ./config/redis_bot/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - bot_nw
+
+  web:
+    container_name: web-client
+    build: ../web-client/editor
+    networks:
+      - frontend_nw
 
 networks:
   bot_nw:
   user_nw:
   redis_auth_nw:
+  frontend_nw:
