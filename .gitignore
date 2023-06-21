@@ -3,6 +3,3 @@ log/
 data/certbot/
 data/pgsql_bot/pgdata/
 data/pgsql_user/pgdata/
-*.sh
-
-!init-letsencrypt.sh

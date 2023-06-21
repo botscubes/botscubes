@@ -68,9 +68,7 @@ REDIS_AUTH_PORT | Yes
 
 - Заполнить файлы необходимыми данных
 
-2. Указать домен и email в файле *init-letsencrypt.sh* 
-
-3. Выполнить 
+2. Выполнить 
 
 ```sh
 ./init-letsencrypt.sh

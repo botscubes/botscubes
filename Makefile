@@ -7,65 +7,58 @@ stop:
 restart:
 	docker compose restart
 
-restart-dev:
-	docker compose -f docker-compose.dev.yml restart
+down:
+	docker compose down --remove-orphans
 
 ps:
-	docker compose -f docker-compose.dev.yml ps
+	docker compose ps
 
-dev: stop-dev
-	docker compose -f docker-compose.dev.yml up -d
-
-stop-dev:
-	docker compose -f docker-compose.dev.yml stop
-
-# recreate any containers that have changes and leave all unchanged services untouched
-recreate:
-	docker compose -f docker-compose.dev.yml up -d
+recreate: stop
+	docker compose up -d
 
 bot-run:
-	docker compose -f docker-compose.dev.yml exec bot go run ./cmd/bot/main.go
+	docker compose exec bot go run ./cmd/bot/main.go
 
 bot-bash:
-	docker compose -f docker-compose.dev.yml exec -it bot bash
+	docker compose exec -it bot bash
 
 bot-tidy:
-	docker compose -f docker-compose.dev.yml exec bot go mod tidy
+	docker compose exec bot go mod tidy
 
 bot-restart:
-	docker compose -f docker-compose.dev.yml restart bot
+	docker compose restart bot
 
 bot-logs:
-	docker compose -f docker-compose.dev.yml logs --tail 200 bot -f
+	docker compose logs --tail 200 bot -f
 
 dart: bot-restart bot-logs
 
-nginx-sh:
-	docker compose -f docker-compose.dev.yml exec -it nginx sh
-
-nginx-reload:
-	docker compose -f docker-compose.dev.yml exec nginx nginx -s reload
-
-nginx-restart:
-	docker compose -f docker-compose.dev.yml restart nginx
-
-down:
-	docker compose -f docker-compose.dev.yml down --remove-orphans
-
 user-tidy:
-	docker compose -f docker-compose.dev.yml exec user go mod tidy
+	docker compose exec user go mod tidy
 
 user-bash:
-	docker compose -f docker-compose.dev.yml exec -it user bash
+	docker compose exec -it user bash
 
 user-run:
-	docker compose -f docker-compose.dev.yml exec user go run ./cmd/server.go
+	docker compose exec user go run ./cmd/server.go
 
 user-restart:
-	docker compose -f docker-compose.dev.yml restart user
+	docker compose restart user
 
 web-sh:
-	docker compose -f docker-compose.dev.yml exec -it web sh
+	docker compose exec -it web sh
 
 web-rebuild:
-	docker compose -f docker-compose.dev.yml up -d --build web
+	docker compose up -d --build web
+
+hp-logs:
+	docker compose logs --tail 200 haproxy -f
+
+hp-sh:
+	docker compose exec -it haproxy sh
+
+hp-restart:
+	docker compose restart haproxy
+
+hp-reload:
+	docker compose kill -s HUP haproxy
