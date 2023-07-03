@@ -1,3 +1,4 @@
+# start & reload env
 start:
 	docker compose up -d
 

@@ -9,12 +9,12 @@
 
 Variable | Required
 --- | ---
-TBOT_WEBHOOK_BASE | Yes
-TBOT_LISTEN_ADDRESS | Yes
+WEBHOOK_BASE | Yes
+LISTEN_ADDRESS | Yes
 JWT_SECRET_KEY | Yes
-TBOT_LOGGER_TYPE | Optional
+LOGGER_TYPE | Optional
 
-`TBOT_LOGGER_TYPE` - возможные значения:  
+`LOGGER_TYPE` - возможные значения:  
 - `dev`
 - `prod`
 
