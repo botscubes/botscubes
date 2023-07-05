@@ -16,14 +16,16 @@ services:
       - "443:443"
     depends_on:
       - bot
+      - bot-worker
       - user
       - web
       - certbot
     networks:
-      - bot_nw
+      - bot_api_nw
       - user_nw
       - frontend_nw
       - certbot_nw
+      - bot_worker_nw
     
   certbot:
     container_name: certbot
@@ -64,8 +66,33 @@ services:
       - redis_bot
       - redis_auth
     networks:
-      - bot_nw
+      - bot_api_nw
       - redis_auth_nw
+      - bot_worker_nw
+  
+  bot-worker:
+    container_name: bot-worker
+    build: ../bot-worker
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    env_file:
+      - ./config/env/bot_worker.env
+      - ./config/env/redis_bot.env
+      - ./config/env/pgsql_bot.env
+    volumes:
+      - ../bot-worker:/app:rw
+      - /root/go/pkg/mod/cache:/go/pkg/mod/cache:rw
+    tty: false
+    command: go run ./cmd/main.go
+    depends_on:
+      - pgsql_bot
+      - redis_bot
+    networks:
+      - bot_worker_nw
   
   pgsql_bot:
     container_name: pgsql_bot
@@ -79,7 +106,8 @@ services:
     ports:
       - "5431:5432"
     networks:
-      - bot_nw
+      - bot_api_nw
+      - bot_worker_nw
 
   user:
     container_name: user-service
@@ -131,7 +159,8 @@ services:
       - ./data/redis_bot/redis_data:/var/lib/redis:rw
       - ./config/redis_bot/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
-      - bot_nw
+      - bot_api_nw
+      - bot_worker_nw
 
   web:
     container_name: web-client
@@ -141,8 +170,9 @@ services:
       - frontend_nw
 
 networks:
-  bot_nw:
+  bot_api_nw:
   user_nw:
   redis_auth_nw:
   frontend_nw:
   certbot_nw:
+  bot_worker_nw:

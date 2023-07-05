@@ -63,3 +63,17 @@ hp-restart:
 
 hp-reload:
 	docker compose kill -s HUP haproxy
+
+worker-tidy:
+	docker compose exec bot-worker go mod tidy
+
+worker-logs:
+	docker compose logs --tail 200 bot-worker -f
+
+worker-restart:
+	docker compose restart bot-worker
+
+wart: worker-restart worker-logs
+
+worker-bash:
+	docker compose exec -it bot-worker bash
