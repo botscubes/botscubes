@@ -65,6 +65,7 @@ services:
       - pgsql_bot
       - redis_bot
       - redis_auth
+      - nats
     networks:
       - bot_api_nw
       - redis_auth_nw
@@ -91,6 +92,7 @@ services:
     depends_on:
       - pgsql_bot
       - redis_bot
+      - nats
     networks:
       - bot_worker_nw
   
@@ -168,6 +170,16 @@ services:
     build: ../web-client/editor
     networks:
       - frontend_nw
+
+  nats:
+    container_name: nats
+    image: nats:2.9.19-alpine
+    restart: unless-stopped
+    networks:
+      - bot_api_nw
+      - bot_worker_nw
+
+
 
 networks:
   bot_api_nw:
