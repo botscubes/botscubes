@@ -9,39 +9,19 @@ services:
       - ./config/env/general.env
       - ./config/env/haproxy.env
     volumes:
-      - ./config/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-      - ./data/certbot/conf/live:/etc/letsencrypt:rw
-    ports:
-      - "80:80"
-      - "443:443"
+      - ./config/haproxy/haproxy_local.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     depends_on:
       - bot
       - bot-worker
       - user
       - web
-      - certbot
     networks:
       - bot_api_nw
       - user_nw
       - frontend_nw
-      - certbot_nw
       - bot_worker_nw
+      - ngrok_nw
     
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    restart: unless-stopped
-    env_file:
-      - ./config/env/general.env
-      - ./config/env/certbot.env
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt:rw
-      - ./log/certbot:/var/log/letsencrypt:rw
-      - ./scripts/certbot:/scripts:ro
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do . /scripts/renew-cert.sh; sleep 12h & wait $${!}; done;'"
-    networks:
-      - certbot_nw
-
   bot:
     container_name: bot-service
     build: ../bot-service
@@ -178,6 +158,22 @@ services:
     networks:
       - bot_api_nw
       - bot_worker_nw
+  
+  ngrok:
+    container_name: ngrok
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./config/ngrok.yml:/etc/ngrok.yml
+    ports:
+      - 4040:4040
+    networks:
+      - ngrok_nw
 
 
 
@@ -186,5 +182,5 @@ networks:
   user_nw:
   redis_auth_nw:
   frontend_nw:
-  certbot_nw:
   bot_worker_nw:
+  ngrok_nw:

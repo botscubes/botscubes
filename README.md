@@ -9,9 +9,24 @@
 
 Variable | Required
 --- | ---
-WEBHOOK_BASE | Yes
+WEBHOOK_DOMAIN | Yes
+WEBHOOK_PATH | Yes
 LISTEN_ADDRESS | Yes
 JWT_SECRET_KEY | Yes
+LOGGER_TYPE | Optional
+NATS_URL | Yes
+
+`LOGGER_TYPE` - возможные значения:  
+- `dev`
+- `prod`
+
+***bot_worker.env***
+
+Variable | Required
+--- | ---
+WEBHOOK_PATH | Yes
+LISTEN_ADDRESS | Yes
+NATS_URL | Yes
 LOGGER_TYPE | Optional
 
 `LOGGER_TYPE` - возможные значения:  
@@ -58,13 +73,11 @@ REDIS_AUTH_PORT | Yes
 </details>
 
 
-## Запуск  
+## Запуск на сервере  
 
-1. Создать `.env` файлы: 
+1. Конфигурация: 
 
 - Скопировать в папку `/config/env/` все файлы из `/config/env/samples`
-
-- Удалить из названия файлов `.sample`
 
 - Заполнить файлы необходимыми данных
 
@@ -74,3 +87,36 @@ REDIS_AUTH_PORT | Yes
 ./init-letsencrypt.sh
 make start
 ```
+
+## Запуск локально (Ngrok)  
+
+1. Конфигурация: 
+
+- Скопировать в папку `/config/env/` все файлы из `/config/env/samples`
+
+- Заполнить файлы необходимыми данных
+
+2. Настройка Ngrok
+
+В [личном кабинете Ngrok][ngrok_dashboard] получить:
+
+- [Cтатический домен][ngrok_get_static_domain]
+
+- [Токен авторизации][ngrok_get_authtoken]
+
+Удалить _.sample_ из названия файла `/config/ngrok.yml.sample` чтобы получилось `/config/ngrok.yml`  
+В данном файле указать полученные в панели управления Ngrok токен и домен
+
+В файле Makefile установить значение `LOCAL_RUN = true`
+
+
+3. Выполнить 
+
+```sh
+make start
+```
+
+[//]: # (LINKS)
+[ngrok_dashboard]: https://dashboard.ngrok.com/
+[ngrok_get_static_domain]: https://dashboard.ngrok.com/cloud-edge/domains
+[ngrok_get_authtoken]: https://dashboard.ngrok.com/tunnels/authtokens

@@ -1,79 +1,88 @@
+LOCAL_RUN = false
+
+DOCKER_CONFIG = docker-compose.yml
+
+ifeq ($(LOCAL_RUN), true)
+	DOCKER_CONFIG = docker-compose.local.yml
+endif
+
+
 # start & reload env
 start:
-	docker compose up -d
+	docker compose -f $(DOCKER_CONFIG) up -d
 
 stop:
-	docker compose stop
+	docker compose -f $(DOCKER_CONFIG) stop
 
 restart:
-	docker compose restart
+	docker compose -f $(DOCKER_CONFIG) restart
 
 down:
-	docker compose down --remove-orphans
+	docker compose -f $(DOCKER_CONFIG) down --remove-orphans
 
 ps:
-	docker compose ps
+	docker compose -f $(DOCKER_CONFIG) ps
 
 recreate: stop
-	docker compose up -d
+	docker compose -f $(DOCKER_CONFIG) up -d
 
 bot-run:
-	docker compose exec bot go run ./cmd/bot/main.go
+	docker compose -f $(DOCKER_CONFIG) exec bot go run ./cmd/bot/main.go
 
 bot-bash:
-	docker compose exec -it bot bash
+	docker compose -f $(DOCKER_CONFIG) exec -it bot bash
 
 bot-tidy:
-	docker compose exec bot go mod tidy
+	docker compose -f $(DOCKER_CONFIG) exec bot go mod tidy
 
 bot-restart:
-	docker compose restart bot
+	docker compose -f $(DOCKER_CONFIG) restart bot
 
 bot-logs:
-	docker compose logs --tail 200 bot -f
+	docker compose -f $(DOCKER_CONFIG) logs --tail 200 bot -f
 
 dart: bot-restart bot-logs
 
 user-tidy:
-	docker compose exec user go mod tidy
+	docker compose -f $(DOCKER_CONFIG) exec user go mod tidy
 
 user-bash:
-	docker compose exec -it user bash
+	docker compose -f $(DOCKER_CONFIG) exec -it user bash
 
 user-run:
-	docker compose exec user go run ./cmd/server.go
+	docker compose -f $(DOCKER_CONFIG) exec user go run ./cmd/server.go
 
 user-restart:
-	docker compose restart user
+	docker compose -f $(DOCKER_CONFIG) restart user
 
 web-sh:
-	docker compose exec -it web sh
+	docker compose -f $(DOCKER_CONFIG) exec -it web sh
 
 web-rebuild:
-	docker compose up -d --build web
+	docker compose -f $(DOCKER_CONFIG) up -d --build web
 
 hp-logs:
-	docker compose logs --tail 200 haproxy -f
+	docker compose -f $(DOCKER_CONFIG) logs --tail 200 haproxy -f
 
 hp-sh:
-	docker compose exec -it haproxy sh
+	docker compose -f $(DOCKER_CONFIG) exec -it haproxy sh
 
 hp-restart:
-	docker compose restart haproxy
+	docker compose -f $(DOCKER_CONFIG) restart haproxy
 
 hp-reload:
-	docker compose kill -s HUP haproxy
+	docker compose -f $(DOCKER_CONFIG) kill -s HUP haproxy
 
 worker-tidy:
-	docker compose exec bot-worker go mod tidy
+	docker compose -f $(DOCKER_CONFIG) exec bot-worker go mod tidy
 
 worker-logs:
-	docker compose logs --tail 200 bot-worker -f
+	docker compose -f $(DOCKER_CONFIG) logs --tail 200 bot-worker -f
 
 worker-restart:
-	docker compose restart bot-worker
+	docker compose -f $(DOCKER_CONFIG) restart bot-worker
 
 wart: worker-restart worker-logs
 
 worker-bash:
-	docker compose exec -it bot-worker bash
+	docker compose -f $(DOCKER_CONFIG) exec -it bot-worker bash

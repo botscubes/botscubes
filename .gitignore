@@ -1,5 +1,8 @@
 *.env
+!config/env/samples/*.env
 log/
 data/certbot/
 data/pgsql_bot/pgdata/
 data/pgsql_user/pgdata/
+cache
+config/ngrok.yml
