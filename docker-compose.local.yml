@@ -33,6 +33,7 @@ services:
         max-file: "5"
     env_file:
       - ./config/env/bot.env
+      - ./config/env/user.env
       - ./config/env/pgsql_bot.env
       - ./config/env/redis_auth.env
       - ./config/env/redis_bot.env
@@ -95,6 +96,10 @@ services:
     container_name: user-service
     build: ../user-service
     restart: unless-stopped
+    env_file:
+      - ./config/env/user.env
+      - ./config/env/pgsql_user.env
+      - ./config/env/redis_auth.env
     volumes:
       - ../user-service:/app:rw
       - ./cache/go/pkg/mod/cache:/go/pkg/mod/cache:rw
