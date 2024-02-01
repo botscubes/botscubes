@@ -14,11 +14,11 @@ services:
       - bot
       - bot-worker
       - user
-      - web
+#     - web
     networks:
       - bot_api_nw
       - user_nw
-      - frontend_nw
+        #      - frontend_nw
       - bot_worker_nw
       - ngrok_nw
     
@@ -149,12 +149,12 @@ services:
       - bot_api_nw
       - bot_worker_nw
 
-  web:
-    container_name: web-client
-    restart: unless-stopped
-    build: ../web-client/editor
-    networks:
-      - frontend_nw
+        #  web:
+        #    container_name: web-client
+        #    restart: unless-stopped
+        #    build: ../web-client/editor
+        #    networks:
+        #      - frontend_nw
 
   nats:
     container_name: nats
@@ -186,6 +186,6 @@ networks:
   bot_api_nw:
   user_nw:
   redis_auth_nw:
-  frontend_nw:
+    # frontend_nw:
   bot_worker_nw:
   ngrok_nw:

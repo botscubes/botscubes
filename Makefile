@@ -1,4 +1,4 @@
-LOCAL_RUN = false
+LOCAL_RUN = true
 
 DOCKER_CONFIG = docker-compose.yml
 
