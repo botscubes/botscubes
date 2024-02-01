@@ -73,8 +73,37 @@ BEGIN
                 ON DELETE CASCADE
         )', prefix, _id);
 
+    EXECUTE format(
+        'CREATE OR REPLACE FUNCTION %1$s%2$s.set_component_id()
+        RETURNS TRIGGER 
+        AS
+        $PROC$
+        DECLARE
+            g_id BIGINT;
+        BEGIN
+            SELECT new_component_id INTO g_id FROM %1$s%2$s.component_group WHERE id = NEW.group_id;
+            
+            NEW.component_id = g_id;
 
-    
+            g_id = g_id + 1;
+
+            UPDATE %1$s%2$s.component_group
+                SET new_component_id = g_id
+                WHERE id = NEW.group_id;
+
+            RETURN NEW;
+        END;
+        $PROC$
+        LANGUAGE PLPGSQL', prefix, _id);
+
+    EXECUTE format(
+        'CREATE TRIGGER component_id_trigger
+        BEFORE INSERT
+        ON %1$s%2$s.component
+        FOR EACH ROW
+        EXECUTE PROCEDURE %1$s%2$s.set_component_id()',
+        prefix, _id);
+
 --   EXECUTE format(
 --        'CREATE TABLE %s%s.command
 --        (
