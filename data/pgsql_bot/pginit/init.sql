@@ -38,7 +38,7 @@ BEGIN
         'CREATE TABLE %s%s.component_group
         (
             id BIGSERIAL NOT NULL,
-            name TEXT,
+            name TEXT UNIQUE,
             new_component_id BIGINT NOT NULL DEFAULT 1,
             PRIMARY KEY (id)
         )', prefix, _id);
@@ -49,7 +49,7 @@ BEGIN
             id bigserial NOT NULL,
             type VARCHAR(20),
             component_id BIGINT NOT NULL UNIQUE,
-            next_id BIGINT,
+            data JSONB,
             path text NOT NULL DEFAULT '''',
             position POINT,
             group_id BIGINT,
