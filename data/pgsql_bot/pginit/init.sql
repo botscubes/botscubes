@@ -48,8 +48,9 @@ BEGIN
         (
             id bigserial NOT NULL,
             type VARCHAR(20),
-            component_id BIGINT NOT NULL UNIQUE,
-            data JSONB,
+            component_id BIGINT NOT NULL,
+            data JSONB NOT NULL DEFAULT ''{}'',
+            connection_points JSONB NOT NULL DEFAULT ''{}'',
             path text NOT NULL DEFAULT '''',
             position POINT,
             group_id BIGINT,
@@ -59,19 +60,19 @@ BEGIN
                 ON DELETE CASCADE
         )', prefix, _id);
 
-    EXECUTE format(
-        'CREATE TABLE %1$s%2$s.connection_point
-        (
-            id bigserial NOT NULL,
-            source_component_id BIGINT,
-            source_point_id TEXT,
-            relative_position POINT,
-            component_id BIGINT,
-            PRIMARY KEY (id),
-            FOREIGN KEY(component_id)
-                REFERENCES %1$s%2$s.component(component_id)
-                ON DELETE CASCADE
-        )', prefix, _id);
+--    EXECUTE format(
+--        'CREATE TABLE %1$s%2$s.connection_point
+--        (
+--            id bigserial NOT NULL,
+--            source_component_id BIGINT,
+--            source_point_id TEXT,
+--            relative_position POINT,
+--            component_id BIGINT,
+--            PRIMARY KEY (id),
+--            FOREIGN KEY(component_id)
+--                REFERENCES %1$s%2$s.component(component_id)
+--                ON DELETE CASCADE
+--        )', prefix, _id);
 
     EXECUTE format(
         'CREATE OR REPLACE FUNCTION %1$s%2$s.set_component_id()
