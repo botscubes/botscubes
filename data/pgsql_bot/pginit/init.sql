@@ -51,6 +51,7 @@ BEGIN
             component_id BIGINT NOT NULL,
             data JSONB NOT NULL DEFAULT ''{}'',
             connection_points JSONB NOT NULL DEFAULT ''{}'',
+            outputs JSONB NOT NULL DEFAULT ''{}'',
             path text NOT NULL DEFAULT '''',
             position POINT,
             group_id BIGINT,
