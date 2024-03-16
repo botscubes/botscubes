@@ -30,6 +30,8 @@ BEGIN
             last_name text,
             username text,
             step_id bigint NOT NULL DEFAULT 1,
+            component_group_id BIGINT NOT NULL DEFAULT 1,
+            context JSONB NOT NULL DEFAULT ''{}'',
             status integer NOT NULL,
             PRIMARY KEY (id)
         )', prefix, _id);
