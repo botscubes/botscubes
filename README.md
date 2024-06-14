@@ -72,31 +72,56 @@ REDIS_AUTH_PORT | Yes
 
 </details>
 
+## Установка
 
-## Запуск на сервере  
+Создайте папку с приложением и перейдите в неё:
 
-1. Конфигурация: 
+```sh
+mkdir app && cd app
+```
+
+Склонируйте данный репозиторий:
+```sh
+git clone https://github.com/botscubes/botscubes.git
+```
+
+Перейдите в папку с конфигурацией конструктора
+```sh
+cd botscubes
+```
+
+Запустите установку:
+```sh
+./install.sh
+```
+
+## Конфигурация
+
+Конфигурация: 
 
 - Скопировать в папку `/config/env/` все файлы из `/config/env/samples`
 
 - Заполнить файлы необходимыми данными
 
-2. Выполнить 
+- Измените [конфигурацию на веб-клиенте](https://github.com/botscubes/web-client#конфигурация):
+
+```sh
+mv ../web-client/src/config.example.ts ../web-client/src/config.ts
+```
+
+## Запуск на сервере  
+
+Выполните:
 
 ```sh
 ./init-letsencrypt.sh
 make start
 ```
 
+
 ## Запуск локально (Ngrok)  
 
-1. Конфигурация: 
-
-- Скопировать в папку `/config/env/` все файлы из `/config/env/samples`
-
-- Заполнить файлы необходимыми данными
-
-2. Настройка Ngrok
+1. Настройка Ngrok
 
 В [личном кабинете Ngrok][ngrok_dashboard] получить:
 
@@ -110,7 +135,7 @@ make start
 В файле Makefile установить значение `LOCAL_RUN = true`
 
 
-3. Выполнить 
+2. Выполнить 
 
 ```sh
 make start

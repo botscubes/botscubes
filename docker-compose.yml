@@ -172,7 +172,7 @@ services:
   web:
     container_name: web-client
     restart: unless-stopped
-    build: ../web-client/editor
+    build: ../web-client/
     networks:
       - frontend_nw
 
