@@ -3,7 +3,7 @@ authtoken: TOKEN
 version: 2
 tunnels:
   haproxy:
-    addr: haproxy:80
+    addr: botscubes_haproxy:80
     proto: http
     # https://dashboard.ngrok.com/cloud-edge/domains
     domain: DOMAIN
