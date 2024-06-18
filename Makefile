@@ -1,9 +1,22 @@
-LOCAL_RUN = true
+# local - local run with ngrok
+# internet -> ngrok -> botscubes.
+# 
+# autonomy - running on a pure server with certbot
+# internet -> botscubes.
+# 
+# service - runnig on a server with third-party revers proxy (using port mapping with localhost (default) or docker bridge network?? )
+# internet -> revers proxy (ex. haproxy, nginx etc...) -> botscubes.
 
-DOCKER_CONFIG = docker-compose.yml
+RUN_TYPE = local
 
-ifeq ($(LOCAL_RUN), true)
+DOCKER_CONFIG=
+
+ifeq ($(RUN_TYPE), local)
 	DOCKER_CONFIG = docker-compose.local.yml
+else ifeq ($(RUN_TYPE), autonomy)
+	DOCKER_CONFIG = docker-compose.yml
+else
+	DOCKER_CONFIG = docker-compose.service.yml
 endif
 
 
@@ -62,16 +75,16 @@ web-rebuild:
 	docker compose -f $(DOCKER_CONFIG) up -d --build web
 
 hp-logs:
-	docker compose -f $(DOCKER_CONFIG) logs --tail 200 haproxy -f
+	docker compose -f $(DOCKER_CONFIG) logs --tail 200 botscubes_haproxy -f
 
 hp-sh:
-	docker compose -f $(DOCKER_CONFIG) exec -it haproxy sh
+	docker compose -f $(DOCKER_CONFIG) exec -it botscubes_haproxy sh
 
 hp-restart:
-	docker compose -f $(DOCKER_CONFIG) restart haproxy
+	docker compose -f $(DOCKER_CONFIG) restart botscubes_haproxy
 
 hp-reload:
-	docker compose -f $(DOCKER_CONFIG) kill -s HUP haproxy
+	docker compose -f $(DOCKER_CONFIG) kill -s HUP botscubes_haproxy
 
 worker-tidy:
 	docker compose -f $(DOCKER_CONFIG) exec bot-worker go mod tidy
@@ -86,3 +99,9 @@ wart: worker-restart worker-logs
 
 worker-bash:
 	docker compose -f $(DOCKER_CONFIG) exec -it bot-worker bash
+
+build:
+	docker compose -f $(DOCKER_CONFIG) build
+
+stats:
+	docker stats

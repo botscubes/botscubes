@@ -1,8 +1,8 @@
-version: '3'
+version: '3.7'
 
 services:
-  haproxy:
-    container_name: haproxy
+  botscubes_haproxy:
+    container_name: botscubes_haproxy
     image: haproxy:2.8-alpine
     restart: unless-stopped
     env_file:
@@ -44,7 +44,9 @@ services:
 
   bot:
     container_name: bot-service
-    build: ../bot-service
+    build:
+      context: ../bot-service
+      dockerfile: ../bot-service/Dockerfile
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -74,7 +76,9 @@ services:
   
   bot-worker:
     container_name: bot-worker
-    build: ../bot-worker
+    build:
+      context: ../bot-worker
+      dockerfile: ../bot-worker/Dockerfile
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -172,7 +176,9 @@ services:
   web:
     container_name: web-client
     restart: unless-stopped
-    build: ../web-client/
+    build:
+      context: ../web-client
+      dockerfile: ../web-client/Dockerfile
     networks:
       - frontend_nw
 

@@ -20,8 +20,10 @@ services:
       - user_nw
       - frontend_nw
       - bot_worker_nw
-      - ngrok_nw
-    
+      - haproxy_nw
+    ports:
+      - "127.0.0.1:14680:80"
+  
   bot:
     container_name: bot-service
     build:
@@ -90,8 +92,6 @@ services:
     volumes: 
       - ./data/pgsql_bot/pginit:/docker-entrypoint-initdb.d:rw
       - ./data/pgsql_bot/pgdata:/var/lib/postgresql/data:rw
-    ports:
-      - "5431:5432"
     networks:
       - bot_api_nw
       - bot_worker_nw
@@ -127,8 +127,6 @@ services:
     volumes: 
       - ./data/pgsql_user/pginit:/docker-entrypoint-initdb.d:rw
       - ./data/pgsql_user/pgdata:/var/lib/postgresql/data:rw
-    ports:
-      - "5430:5432"
     networks:
       - user_nw
 
@@ -171,24 +169,6 @@ services:
     networks:
       - bot_api_nw
       - bot_worker_nw
-  
-  ngrok:
-    container_name: ngrok
-    image: ngrok/ngrok:latest
-    restart: unless-stopped
-    command:
-      - "start"
-      - "--all"
-      - "--config"
-      - "/etc/ngrok.yml"
-    volumes:
-      - ./config/ngrok.yml:/etc/ngrok.yml
-    ports:
-      - 4040:4040
-    networks:
-      - ngrok_nw
-
-
 
 networks:
   bot_api_nw:
@@ -196,4 +176,4 @@ networks:
   redis_auth_nw:
   frontend_nw:
   bot_worker_nw:
-  ngrok_nw:
+  haproxy_nw:
