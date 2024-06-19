@@ -18,7 +18,7 @@ docker compose exec certbot /bin/sh -c "/scripts/create-dummy-cert.sh"
 echo
 
 echo "### Starting haproxy ..."
-docker compose up --force-recreate -d haproxy
+docker compose up --force-recreate -d botscubes_haproxy
 echo
 
 echo "### Delete dummy certificate"
@@ -30,4 +30,4 @@ docker compose exec certbot /bin/sh -c "/scripts/create-cert.sh"
 echo
 
 echo "### Reloading haproxy..."
-docker compose exec haproxy kill -SIGUSR2 1
+docker compose exec botscubes_haproxy kill -SIGUSR2 1
