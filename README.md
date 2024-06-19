@@ -170,3 +170,18 @@ make start
 [ngrok_dashboard]: https://dashboard.ngrok.com/
 [ngrok_get_static_domain]: https://dashboard.ngrok.com/cloud-edge/domains
 [ngrok_get_authtoken]: https://dashboard.ngrok.com/tunnels/authtokens
+
+
+## Руководство пользователя
+
+После выполнения некоторых компонентов можно обращаться к их результату 
+через переменную, 
+название которой совпадает с названием компонента.
+Например, для компонента ввода текста переменная будет `textInput`.
+
+Список компонентов приведён 
+[здесь](https://github.com/botscubes/bot-components/blob/main/docs/components/README.md#список-компонентов).
+
+Если произошла ошибка, то можно вывести её с помощью переменной `error`.
+
+
